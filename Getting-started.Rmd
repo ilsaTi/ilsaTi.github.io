@@ -1,0 +1,162 @@
+---
+title: "Virtualization - Linux Container on CentOS"
+output: 
+  html_document :
+    theme: journal
+    toc: true
+    code_folding: show
+    includes:
+      #before_body: header.html
+      after_body: footer.html
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+#flexdashboard::flex_dashboard
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(flexdashboard)
+library(tint)
+```
+
+Setup {data-icon="fa-table"}
+===================================== 
+***
+
+
+
+### Objective
+  * Install and spin a LXC container on CentOS 7
+  
+  
+### Pre-requisites
+  * CentOS 7 64 bits -  can be downloaded as a VirtualBox image from <https://www.osboxes.org/centos/>.
+  
+  
+  ![](Getting-Started.png)
+  
+
+
+ * You will need to install the EPEL repository (Exta Package For Entreprise Linux).
+ 
+```{r class="markdown", eval = FALSE,  results = "hide"}
+yum install -y epel-release
+```
+  
+  
+ * You can check if the **epel-release** repository has been added with.
+ 
+
+### Install LXC
+
+  * Now, you are ready to install LXC and its templates with: 
+  
+```{r class="markdown", eval = FALSE,  results = "hide"}
+yum install -y lxc lxc-templates debootstrap perl libcap-devel libcgroup wget bridge-utils x-extra libvirt`
+```
+
+  ![](install-lxc.png)
+
+
+  * Once installation is complete, start and enable the **LXC.service**.
+ 
+
+```{r class="markdown", eval = FALSE,  results = "hide"}
+ systemctl start lxc
+ systemctl enable lxc
+```
+
+
+
+  
+    
+Create a LXC container {data-icon="fa-table"}
+=====================================    
+***
+
+### Explore LXC
+
+
+ * You can explore the LXC directory with ` ls -lrt /usr/share/lxc/` and `ls -lrt /usr/share/lxc/templates/` where the available templates are stored.
+ 
+    
+
+### Create your container
+
+  * Disable **SeLinux** with `setenforce 0`. **SeLinux** prevents the updates of some files
+  
+  * Create you first container by running `lxc-create -n centos_vm1 -t centos`
+
+
+```{r class="markdown", eval = FALSE,  results = "hide"}
+ lxc-create -n centos_vm1 -t centos
+```
+
+ * Successful creation will show this.  
+ ![](lxc-install-complete.png)
+
+ * List the containers created with `lxc-ls --fancy`
+ 
+
+ * To update the password, run the 
+
+```{r class="markdown", eval = FALSE, results = "hide"}
+ chroot /var/lib/lxc/centos_vm1/rootfs passwd
+```
+
+
+### Start your container
+
+ * Start your Centos container. 
+ 
+```{r class="markdown", eval = FALSE, results = "hide"}
+  lxc-start -n centos_vm1 -d
+```
+   
+   `-d` will avoid being prompted the username/password fields.
+ 
+ * You can check the `STATE` with `lxc-ls --fancy`
+ 
+ ![](lxc-ls-fancy.png)
+
+ * Now you are ready to log into your Centos container with `lxc-attach`
+ 
+ 
+```{r class="markdown", eval = FALSE, results = "hide"}
+  lxc-attach -n centos_vm1
+```
+
+ 
+  ![](lxc_log_in.png)
+
+Use your LXC container {data-icon="fa-table"}
+=====================================    
+***
+
+ * You can then run usual commands on the container or install new packages.
+
+```{r class="markdown", eval = FALSE, results = "hide"}
+ip a s
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+6: eth0@if7: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether fe:5b:01:7a:f3:2c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.122.15/24 brd 192.168.122.255 scope global dynamic eth0
+       valid_lft 3582sec preferred_lft 3582sec
+    inet6 fe80::fc5b:1ff:fe7a:f32c/64 scope link
+       valid_lft forever preferred_lft forever
+```
+
+```{r class="markdown", eval = FALSE, results = "hide"}
+yum install -y nmap
+```
+
+  * `exit` command will allow you to exit from the container
+  * `shutdown -r now` will restart the container
+ 
