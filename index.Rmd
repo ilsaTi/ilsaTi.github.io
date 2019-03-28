@@ -33,6 +33,8 @@ Setup {data-icon="fa-table"}
   
 ### Pre-requisites
   * CentOS 7 64 bits -  can be downloaded as a VirtualBox image from <https://www.osboxes.org/centos/>.
+  * Disable **SELinux** with `setenforce 0`. **SELinux** prevents some files like `passwd` to be updated. Not disabling it could generate errors during the container creation and a `passwd authentication token manipulation error` error when updating passwords.
+
   
   
   ![](Getting-Started.png)
@@ -78,14 +80,16 @@ Create a LXC container {data-icon="fa-table"}
 
 ### Explore LXC
 
+You can explore the LXC directory with following commands:
 
- * You can explore the LXC directory with ` ls -lrt /usr/share/lxc/` and `ls -lrt /usr/share/lxc/templates/` where the available templates are stored.
+ * ` ls -lrt /usr/share/lxc/` 
+ * `ls -lrt /usr/share/lxc/templates/` where the available templates are stored
+ 
  
     
 
 ### Create your container
 
-  * Disable **SeLinux** with `setenforce 0`. **SeLinux** prevents the updates of some files
   
   * Create you first container by running `lxc-create -n centos_vm1 -t centos`
 
@@ -135,6 +139,14 @@ Use your LXC container {data-icon="fa-table"}
 =====================================    
 ***
 
+### LXC commands
+
+ * `lxc-clone`
+ * `lxc-destroy` 
+ 
+ 
+### Other commands
+
  * You can then run usual commands on the container or install new packages.
 
 ```{r class="markdown", eval = FALSE, results = "hide"}
@@ -153,10 +165,13 @@ ip a s
        valid_lft forever preferred_lft forever
 ```
 
+
 ```{r class="markdown", eval = FALSE, results = "hide"}
 yum install -y nmap
 ```
 
   * `exit` command will allow you to exit from the container
   * `shutdown -r now` will restart the container
+  
+  
  
