@@ -32,23 +32,27 @@ Setup {data-icon="fa-table"}
   
   
 ### Pre-requisites
-  * CentOS 7 64 bits -  can be downloaded as a VirtualBox image from <https://www.osboxes.org/centos/>.
-  * Disable **SELinux** with `setenforce 0`. **SELinux** prevents some files like `passwd` to be updated. Not disabling it could generate errors during the container creation and a `passwd authentication token manipulation error` error when updating passwords.
-
-  
+#### CentOS image
+  In this article, we used CentOS 7 64 bits -  can be downloaded as a VirtualBox image from <https://www.osboxes.org/centos/>.
   
   ![](Getting-Started.png)
+
+#### SELinux
+ **SELinux** must be disabled with 
+```{r class="markdown", eval = FALSE,  results = "hide"}
+  setenforce 0
+```
   
+  **SELinux** prevents some files like `passwd` to be updated. Not disabling it could generate errors during the container creation and a `passwd authentication token manipulation error` error when updating passwords.
 
-
- * You will need to install the EPEL repository (Exta Package For Entreprise Linux).
+#### EPEL
+You will need to install the EPEL repository (Exta Package For Entreprise Linux).
  
 ```{r class="markdown", eval = FALSE,  results = "hide"}
 yum install -y epel-release
 ```
   
-  
- * You can check if the **epel-release** repository has been added with.
+You can check if the **epel-release** repository has been added with.
  
 
 ### Install LXC
